@@ -16,7 +16,7 @@ const NavBar = () => {
         </div>
       </Link>
 
-      <div className={`absolute top-full px-[5vw] mt-2 w-full right-0 h-[48px] transition-all duration-500 md:flex md:inset-0 md:w-auto md:left-[8vw] ${searchVisible ? "" : "hidden"}`}>
+      <div className={`absolute top-full px-[5vw] mt-2 w-full right-0 h-[48px] transition-all duration-500 md:flex md:inset-0 md:w-auto md:left-[64px] ${searchVisible ? "" : "hidden"}`}>
         <input className='w-full focus:outline-purple-200 h-[48px] rounded-full px-12 bg-lighta text-textlightb md:w-auto' /> 
 
         <i className="fi fi-rr-search absolute left-[5vw] pl-5 pt-1 top-1/2 -translate-y-1/2 text-textlightb"></i>     
