@@ -11,8 +11,8 @@ interface HeadingProps {
 
 const Heading = ({heading, subheading, toLink, toLabel}: HeadingProps) => {
   return (
-    <div className="flex flex-col items-center text-textlightb px-2 py-2">
-      <h1 className="text-3xl font-semibold ">
+    <div className="flex flex-col items-center text-textlightb px-2 pb-10">
+      <h1 className="text-4xl font-semibold pb-2">
         {heading}
       </h1>
       <div className="flex gap-1 text-sm">
