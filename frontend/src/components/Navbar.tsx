@@ -29,7 +29,7 @@ const NavBar = () => {
       </button>
       
 
-      <div className='absolute right-[18vw] flex items-center gap-2 md:gap-4 md:right-[5vw]'>
+      <div className='absolute right-[15vw] flex items-center gap-2 md:gap-4 md:right-[5vw]'>
 
 
         <Link to={'/write'}>
