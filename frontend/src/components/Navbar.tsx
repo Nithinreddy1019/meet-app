@@ -22,14 +22,16 @@ const NavBar = () => {
         <i className="fi fi-rr-search absolute left-[5vw] pl-5 pt-1 top-1/2 -translate-y-1/2 text-textlightb"></i>     
       </div>
 
-      <button className='flex items-center justify-center bg-lighta text-textlightb rounded-full w-10 h-10 absolute right-[5vw] hover:shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] md:hidden ' onClick={() => {
+      
+      
+
+      <div className='absolute right-[5vw] flex items-center gap-2 md:gap-4 md:right-[5vw]'>
+
+      <button className='flex items-center justify-center bg-lighta text-textlightb rounded-full w-10 h-10 absolute right-[160px] hover:shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] md:hidden ' onClick={() => {
         setSearchVisible(!searchVisible)
       }}>
           <i className="fi fi-rr-search"></i>
       </button>
-      
-
-      <div className='absolute right-[15vw] flex items-center gap-2 md:gap-4 md:right-[5vw]'>
 
 
         <Link to={'/write'}>

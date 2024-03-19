@@ -5,6 +5,7 @@ import SubmitButton from "../ui/SubmitButton"
 import logo from '../assets/logo.svg'
 import { Link } from "react-router-dom"
 import Animate from "../components/Animate"
+import {SigninWithGoogle} from '../Firebaseconfig'
 
 const Signup = () => {
 
@@ -52,8 +53,35 @@ const Signup = () => {
 
                 <SubmitButton label={"Signup"} />
 
-                <div className="w-full border-b mt-4 px-8"></div>
+                <div className="w-full border-b mt-4 px-8">
+                    <span className="relative top-2.5 left-[136px] bg-white px-2 py-2 text-textlightb text-lg">or</span>
+                </div>
                 
+                <div className="bg-lighta rounded-full px-4 py-2 mt-4 text-textlightb hover:shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]">
+                    <button className="flex items-center gap-x-2 " onClick={async () => {
+                        try {
+                            const res = await SigninWithGoogle();
+                            const user = res.user as {accessToken?: string, email:string, displayName: string}
+                            console.log(user.displayName);
+                            console.log(user.email)
+                            console.log(user.accessToken)
+                        } catch (error: unknown) {
+                            if (error instanceof Error) {
+                                const typedError = error as { code?: string }; 
+                                if (typedError.code === 'auth/cancelled-popup-request') {
+                                    console.log("User cancelled signup");
+                                } else {
+                                    console.error(error.message);
+                                }
+                            } else {
+                                console.log('An unknown error occurred');
+                            }
+                        }
+                    }}>
+                        <i className="fi fi-brands-google pt-1"></i>
+                        <p>Signup with Google</p>
+                    </button>
+                </div>
 
             </div>
         </div>
