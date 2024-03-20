@@ -80,7 +80,8 @@ userRouter.post("/google-signup", async (req, res) => {
     };
 
     try {
-        const FIREBASE_API = process.env.FIREBASE_API
+        const FIREBASE_API_LINK = process.env.FIREBASE_API
+        const FIREBASE_API: string = FIREBASE_API_LINK as string
         
         const axiosResponse = await axios.post(FIREBASE_API, {
         idToken: body.idToken
