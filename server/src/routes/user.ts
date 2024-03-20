@@ -1,6 +1,6 @@
 import { Router } from "express";
 import express from "express";
-import z from 'zod';
+import z, { string } from 'zod';
 import {PrismaClient} from '@prisma/client'
 import { hashpass } from "../hashpass";
 import * as jwt from 'jsonwebtoken';
@@ -80,7 +80,9 @@ userRouter.post("/google-signup", async (req, res) => {
     };
 
     try {
-        const axiosResponse = await axios.post("https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyDSQJQFTKzLd554vWTvt2A_SrFVmnjGib8", {
+        const FIREBASE_API = process.env.FIREBASE_API
+        
+        const axiosResponse = await axios.post(FIREBASE_API, {
         idToken: body.idToken
         }, {
             headers: {
