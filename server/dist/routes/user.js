@@ -87,6 +87,45 @@ userRouter.post("/signup", (req, res) => __awaiter(void 0, void 0, void 0, funct
         return res.json({ msg: "Unexpected error" });
     }
 }));
+const SigninSchema = zod_1.default.object({
+    email: zod_1.default.string().email(),
+    password: zod_1.default.string().min(6)
+});
+userRouter.post("/signin", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const body = req.body;
+    const parsedBody = SigninSchema.safeParse(body);
+    if (!parsedBody.success) {
+        res.status(400);
+        return res.json({ msg: "Incorrect credentials" });
+    }
+    ;
+    try {
+        const user = yield prisma.user.findUnique({
+            where: {
+                email: body.email
+            }
+        });
+        if (!user) {
+            res.status(409);
+            return res.json({ msg: "User not found" });
+        }
+        ;
+        if (user.password) {
+            const validated = yield (0, hashpass_1.comparehashedPass)(body.password, user.password);
+            if (!validated) {
+                res.status(403);
+                return res.json({ msg: "Incorrect password" });
+            }
+            const token = jwt.sign({ id: user.id }, JWT_PASS);
+            res.status(200);
+            return res.json({ msg: "Logged in successfully", token: token });
+        }
+    }
+    catch (error) {
+        res.status(500);
+        return res.json({ msg: "An error occured" });
+    }
+}));
 //google auth
 const GoogleSignupSchema = zod_1.default.object({
     provider: zod_1.default.string(),
@@ -101,7 +140,9 @@ userRouter.post("/google-signup", (req, res) => __awaiter(void 0, void 0, void 0
     }
     ;
     try {
-        const axiosResponse = yield axios_1.default.post("https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyDSQJQFTKzLd554vWTvt2A_SrFVmnjGib8", {
+        const FIREBASE_API_LINK = process.env.FIREBASE_API;
+        const FIREBASE_API = FIREBASE_API_LINK;
+        const axiosResponse = yield axios_1.default.post(FIREBASE_API, {
             idToken: body.idToken
         }, {
             headers: {

@@ -1,8 +1,8 @@
 import { Router } from "express";
 import express from "express";
-import z, { string } from 'zod';
+import z, { ParseStatus, string } from 'zod';
 import {PrismaClient} from '@prisma/client'
-import { hashpass } from "../hashpass";
+import { comparehashedPass, hashpass } from "../hashpass";
 import * as jwt from 'jsonwebtoken';
 import axios from "axios";
 
@@ -63,6 +63,53 @@ userRouter.post("/signup", async (req, res) => {
     }
 
 });
+
+
+const SigninSchema = z.object({
+    email: z.string().email(),
+    password: z.string().min(6)
+});
+userRouter.post("/signin", async(req, res) => {
+    const body = req.body;
+
+    const parsedBody = SigninSchema.safeParse(body);
+    if(!parsedBody.success){
+        res.status(400);
+        return res.json({msg: "Incorrect credentials"})
+    };
+
+    try {
+        const user = await prisma.user.findUnique({
+            where: {
+                email: body.email
+            }
+        });
+
+        if(!user){
+            res.status(409);
+            return res.json({msg: "User not found"})
+        };
+
+        if(user.password){
+            
+            const validated = await comparehashedPass(body.password, user.password)
+            if(!validated){
+                res.status(403);
+                return res.json({msg: "Incorrect password"})
+            }
+
+            const token = jwt.sign({id: user.id}, JWT_PASS)
+            res.status(200);
+            return res.json({msg: "Logged in successfully", token: token})
+
+        }
+    } catch (error) {
+        res.status(500);
+        return res.json({msg: "An error occured"})
+    }
+});
+
+
 
 
 //google auth
@@ -135,8 +182,10 @@ userRouter.post("/google-signup", async (req, res) => {
         return res.json({msg: "Unexpected error occured"})
     }
 
-
 });
+
+
+
 
 
 export default userRouter;
