@@ -1,21 +1,31 @@
 import { motion, AnimatePresence } from 'framer-motion';
+import React from 'react';
+
 
 type props = {
-    children: string | JSX.Element | JSX.Element[]
+    children: React.ReactNode; 
+    initial?: object;
+    animate?: object;
+    transition?: object;
 }
 
-const Animate = ({children}: props) => {
+const Animate: React.FC<props> = ({
+    children,
+    initial = { opacity: 0 },
+    animate = { opacity: 1 },
+    transition = { duration: 0.8 }
+}) => {
     return (
         <AnimatePresence>
             <motion.div 
-                initial={{opacity:0}}
-                animate={{opacity:1}}
-                transition={{duration:0.8}}
+                initial={initial}
+                animate={animate}
+                transition={transition}
             >
                 {children}
             </motion.div>
         </AnimatePresence>
-    )
+    );
 }
 
-export default Animate
+export default Animate;
