@@ -29,6 +29,7 @@ const UserNavigation = () => {
 
                 <button className="text-left p-2 pl-6 py-2 hover:bg-lighta w-full hover:text-black" onClick={() => {
                     localStorage.removeItem("token");
+                    
                     navigate("/")
                 }}>
                     <h1 className="font-semibold pl-0.5">Sign out</h1>
