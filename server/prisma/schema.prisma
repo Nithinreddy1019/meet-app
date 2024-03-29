@@ -23,3 +23,9 @@ model User{
   provider String @default("native")
   created_at DateTime @default(now())
 }
+
+
+model images{
+  id Int @id @default(autoincrement())
+  key String @unique
+}
