@@ -7,10 +7,12 @@ import { Toaster, toast } from "sonner"
 import { uploadImage } from "../aws"
 import { BACKEND } from "../config"
 import axios from "axios"
+import EditorWysiwig from "../components/EditorWysiwig"
 
 const BlogEditor = () => {
 
   const [imageSrc, setimageSrc] = useState(uploadBanner);
+  const [title, setTitle] = useState('New Blog')
 
   const handleBannerUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     if(e.target.files ===null){
@@ -44,7 +46,11 @@ const BlogEditor = () => {
 
     input.style.height = 'auto';
     input.style.height = input.scrollHeight+'px';
+
+    setTitle(input.value);
   }
+
+
 
   return (
     <>
@@ -56,7 +62,7 @@ const BlogEditor = () => {
             </Link>
 
             <p className="max-md:hidden line-clamp-1 max-w-36 text-textlightb">
-              New Blog 
+              {title} 
             </p>
 
             <div className="flex ml-auto gap-4">
@@ -74,7 +80,7 @@ const BlogEditor = () => {
         </nav>
         
         <Animate>
-          <div className="mx-auto max-w-[900px] w-full text-textlightb mt-2">
+          <div className="mx-auto max-w-[900px] w-full text-textlightb mt-2 px-2">
             <Toaster position="top-center" duration={1500} visibleToasts={2}/>
 
             <div className="realtive aspect-video hover:opacity-80 border-4 border-gray-100 transition-all duration-300">
@@ -101,6 +107,10 @@ const BlogEditor = () => {
             </textarea>
 
             <hr className="w-full my-4 opacity-40"/>
+
+            <div id="textEditor" className="w-full text-xl">
+              <EditorWysiwig />
+            </div>
 
           </div>
         </Animate>

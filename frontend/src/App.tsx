@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import './App.css'
 import { lazy, Suspense } from 'react'
 import { RecoilRoot } from 'recoil'
+import BlogPublish from './pages/BlogPublish'
 
 
 const Home = lazy(() => import('./pages/Home'))
@@ -21,6 +22,7 @@ function App() {
             <Route path={'/signup'} element={<Signup />}/>
             <Route path={'/signin'} element={<Signin />} />
             <Route path={'/write'} element={<Write />}/>
+            <Route path={'/publish'} element={<BlogPublish />}/>
           </Routes>
         </Suspense>
       </BrowserRouter>
