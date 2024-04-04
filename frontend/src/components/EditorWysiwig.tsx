@@ -6,10 +6,15 @@ import "@mantine/core/styles.css";
 import { useEffect, useState } from "react";
 import { Alert } from "./EditorAlert";
 import { RiAlertFill } from "react-icons/ri";
+import { uploadImage } from "../aws";
+import axios from "axios";
+import { BACKEND } from "../config";
 
 
 
 function EditorWysiwig() {
+
+    const [jsonValue, setJsonValue] = useState<string>("");
 
   // Uploads a file to tmpfiles.org and returns the URL to the uploaded file.
   //Need to upload to aws(todo)
@@ -17,6 +22,18 @@ function EditorWysiwig() {
     const body = new FormData();
     body.append("file", file);
   
+
+    const key = await uploadImage(file);
+
+    const imgNameKey = key.split('?')[0].split("/")
+    const finalKey = imgNameKey[imgNameKey.length - 1]
+    const res = await axios.post(`${BACKEND}/api/v1/img/getpresignedurl`, {key: finalKey}, {headers: {
+      "Authorization": `Bearer ${localStorage.getItem('token')}`
+    }});
+
+    return(res.data.url)
+
+
     const ret = await fetch("https://tmpfiles.org/api/v1/upload", {
       method: "POST",
       body: body,
@@ -35,6 +52,7 @@ function EditorWysiwig() {
       // Adds the Alert block.
       alert: Alert,
     },
+    
   });
 
   const insertAlert = (editor: typeof schema.BlockNoteEditor) => ({
@@ -77,22 +95,25 @@ function EditorWysiwig() {
       const initialHtml = localStorage.getItem("docValue")
       const blocks = await JSON.parse(initialHtml!);
       editor.replaceBlocks(editor.document, blocks)
+      console.log(editor.replaceBlocks(editor.document, blocks))
     }
 
     loadInitialHtml()
   }, [])
 
 
-  const handleSave = async () => {
-    const html = await JSON.stringify(editor.document);
-    localStorage.setItem("docValue", html);
+
+  const handleChange = async() => {
+    const jsonValue = JSON.stringify(editor.document);
+    setJsonValue(jsonValue)
+    localStorage.setItem("docValue", jsonValue)
   }
 
 
 
   return (
     <div>
-      <BlockNoteView editor={editor} theme={'light'} className=" h-96" slashMenu={false}>
+      <BlockNoteView editor={editor} theme={'light'} className=" h-96" slashMenu={false} onChange={handleChange} >
         <SuggestionMenuController
           triggerCharacter={"/"}
           getItems={async (query) =>
@@ -105,8 +126,6 @@ function EditorWysiwig() {
         />
       </BlockNoteView>
 
-
-      <button className="bg-black text-white rounded-xl px-3 py-2 mt-8 ml-4" onClick={handleSave}>Save</button>
     </div>
   ) 
 }
