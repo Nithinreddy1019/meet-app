@@ -26,7 +26,9 @@ const BlogEditor = () => {
 
     const imgNameKey = key.split('?')[0].split("/")
     const finalKey = imgNameKey[imgNameKey.length - 1]
-    const res = await axios.post(`${BACKEND}/api/v1/img/getpresignedurl`, {key: finalKey});
+    const res = await axios.post(`${BACKEND}/api/v1/img/getpresignedurl`, {key: finalKey}, {headers: {
+      "Authorization":`Bearer ${localStorage.getItem('token')}`
+    }});
     toast.dismiss(loadingToast);
 
     setimageSrc(res.data.url);   
@@ -55,7 +57,7 @@ const BlogEditor = () => {
   return (
     <>
 
-        <nav className="flex items-center bg-white sticky z-10 h-[64px] px-[5vw] border-b gap-12">
+        <nav className="flex items-center bg-white sticky top-0 z-10 h-[64px] px-[5vw] border-b gap-12">
 
             <Link to={'/'}>
                 <img src={logo} className='w-14 h-14'/>
@@ -67,9 +69,11 @@ const BlogEditor = () => {
 
             <div className="flex ml-auto gap-4">
 
+              <Link to={"/publish"}>
               <button className="hover:shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] hover:bg-black bg-textlightb text-lightb px-4 py-1 rounded-full transition-all duration-200">
                 Publish
               </button>
+              </Link>
 
               <button className="hover:shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] bg-lighta text-textlightb px-2 py-1 rounded-full transition-all duration-200">
                 Save draft
@@ -87,7 +91,7 @@ const BlogEditor = () => {
               <label htmlFor="uploadBanner">
                 <img 
                   src={imageSrc || uploadBanner}
-                  className="w-full h-full z-20 opacity-20"/>
+                  className="w-full h-full z-20"/>
                 <input 
                   id="uploadBanner" 
                   type="file"
@@ -101,7 +105,7 @@ const BlogEditor = () => {
 
             <textarea 
             placeholder="Blog title"
-            className="w-full h-24 mt-4 text-4xl font-medium outline-none resize-none placeholder:opacity-40"
+            className="w-full h-24 mt-4 text-4xl font-medium outline-none resize-none placeholder:opacity-80"
             onKeyDown={handleTitleKeydown}
             onChange={handleTitleChange}>
             </textarea>
